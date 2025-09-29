@@ -9,8 +9,7 @@ def train_model(data_path='data/data.csv', model_path='models/model.joblib'):
     # Load the dataset
     df = pd.read_csv(data_path)
 
-    # Basic preprocessing: Drop the 'id' column and the 'Unnamed: 32' column
-    # which often appears as an empty column in this dataset
+    # Basic preprocessing: Drop the 'id' column and the 'Unnamed: 32'
     df.drop(['id', 'Unnamed: 32'], axis=1, inplace=True)
 
     # Convert 'diagnosis' column to numerical (M=1, B=0)
@@ -20,7 +19,7 @@ def train_model(data_path='data/data.csv', model_path='models/model.joblib'):
     X = df.drop('diagnosis', axis=1)
     y = df['diagnosis']
 
-    # Split data into training and testing sets
+    # Split data into train/test sets
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
     # Train a RandomForestClassifier model
