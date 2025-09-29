@@ -46,15 +46,12 @@ def predict():
     try:
         # Convert input data to DataFrame, ensuring feature order matches training
         # For simplicity, assuming input directly matches model's expected features
-        # In a real-world scenario, you'd want a more robust feature engineering pipeline
+        # In a real-world scenario, a more robust feature engineering pipeline is needed
         input_df = pd.DataFrame([data])
 
         # Ensure all expected features are present and in the correct order
         # This requires knowing the features the model was trained on. For now, we'll assume
         # the input JSON keys match the column names expected by the model.
-        # A better approach would be to save the feature columns from training and use them here.
-        # For this exercise, we'll get the features from the trained model's expected features if available.
-        # If not, we'll assume the input_df columns are correct.
         if hasattr(model, 'feature_names_in_'):
             expected_features = model.feature_names_in_ # scikit-learn >= 0.23
             # Reorder and potentially add missing features with default values (e.g., 0 or mean)
@@ -71,8 +68,8 @@ def predict():
         prediction_proba = model.predict_proba(input_df)
 
         result = {
-            'prediction': int(prediction[0]), # Convert numpy int to Python int
-            'probability_benign': float(prediction_proba[0][0]), # Class 0 (Benign)
+            'prediction': int(prediction[0]),
+            'probability_benign': float(prediction_proba[0][0]),   # Class 0 (Benign)
             'probability_malignant': float(prediction_proba[0][1]) # Class 1 (Malignant)
         }
         logging.info(f"Prediction successful: {result}")
