@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+*.log
+.venv/
+
+# Data
+data/
+
+# Models
+models/
+
+# IDE specific
+.vscode/
+.idea/
+
+# Kaggle credentials (if you used API before, although we reverted)
+kaggle.json
+
+# Environment variables
+.env
