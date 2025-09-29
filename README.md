@@ -21,7 +21,7 @@ README.md               # Project documentation
 
 1.  **Clone the repository (if not already done):**
     ```bash
-    git clone https://github.com/Anibalrojo/breast-cancer-mlops-workflowy
+    git clone https://github.com/Anibalrojo/breast-cancer-mlops-workflow
     cd breast-cancer-ops
     ```
 
