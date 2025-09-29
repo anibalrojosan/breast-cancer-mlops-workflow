@@ -9,8 +9,8 @@ This project demonstrates a basic MLOps workflow for deploying a Breast Cancer p
 data/                   # Stores the dataset (data.csv)
 models/                 # Stores the trained model (model.joblib)
 src/
-  app.py              # Flask API for model inference
-  model.py            # Script for training and saving the model
+  app.py                # Flask API for model inference
+  model.py              # Script for training and saving the model
 tests/                  # For unit and integration tests
 Dockerfile              # Dockerfile for containerization
 requirements.txt        # Python dependencies
