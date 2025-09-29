@@ -10,9 +10,18 @@ data/
 # Models
 models/
 
+# Source files to be ignored
+src/app.py
+
 # IDE specific
 .vscode/
 .idea/
+
+# Docker
+Dockerfile
+
+# Kaggle credentials (if you used API before, although we reverted)
+kaggle.json
 
 # Environment variables
 .env
