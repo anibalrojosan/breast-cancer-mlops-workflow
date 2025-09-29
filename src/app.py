@@ -12,17 +12,17 @@ app = Flask(__name__)
 # Path to the trained model
 MODEL_PATH = 'models/model.joblib'
 
-# Load the model
 try:
     model = joblib.load(MODEL_PATH)
     logging.info("Model loaded successfully.")
 except FileNotFoundError:
-    logging.error(f"Model file not found at {MODEL_PATH}. Please train the model first.")
+    logging.error(f"Model file not found at {MODEL_PATH}. Train the model first.")
     model = None
 except Exception as e:
     logging.error(f"Error loading model: {e}")
     model = None
 
+# Endpoints
 @app.route('/', methods=['GET'])
 def health_check():
     """Health check endpoint."""
@@ -39,10 +39,12 @@ def predict():
     data = request.get_json(force=True)
     logging.info(f"Received prediction request with data: {data}")
 
+    # Input validation
     if not data or not isinstance(data, dict):
         logging.warning("Invalid input: No JSON data or not a dictionary.")
         return jsonify({'error': 'Invalid JSON input. Please send a dictionary of features.'}), 400
 
+    # Data transformation and feature alignment 
     try:
         # Convert input data to DataFrame, ensuring feature order matches training
         # For simplicity, assuming input directly matches model's expected features
