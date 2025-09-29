@@ -4,9 +4,6 @@ __pycache__/
 *.log
 .venv/
 
-# Data
-data/
-
 # Models
 models/
 
