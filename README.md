@@ -34,7 +34,7 @@ README.md               # Project documentation
     *For Windows*:
     ```powershell
     python -m venv .venv
-    .venv\Scripts\Activate.ps1
+    .\\.venv\\Scripts\\Activate.ps1
     ```
 
     *For Linux/macOS or Git Bash:*
