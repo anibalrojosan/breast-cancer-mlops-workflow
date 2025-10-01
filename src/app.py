@@ -2,10 +2,19 @@ from flask import Flask, request, jsonify
 import joblib
 import pandas as pd
 import logging
+import sys # Import sys
 import os
 
 # Configure logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+log_file_path = 'api_logs.log'
+logging.basicConfig(
+    level=logging.INFO,
+    format='*** FLASK API LOG: %(asctime)s - %(levelname)s - %(message)s ***',
+    handlers=[
+        logging.FileHandler(log_file_path),
+        logging.StreamHandler(sys.stdout) # Explicitly use sys.stdout for terminal output
+    ]
+)
 
 app = Flask(__name__)
 
@@ -32,6 +41,7 @@ def health_check():
 @app.route('/predict', methods=['POST'])
 def predict():
     """Prediction endpoint."""
+    logging.info("Prediction endpoint hit.")
     if model is None:
         logging.error("Prediction requested but model is not loaded.")
         return jsonify({'error': 'Model not loaded. Please ensure the model is trained and available.'}), 500
@@ -85,4 +95,4 @@ def predict():
         return jsonify({'error': f'An internal error occurred: {e}'}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=False, use_reloader=False, host='0.0.0.0', port=5000)
