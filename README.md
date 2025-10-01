@@ -20,6 +20,7 @@ Dockerfile              # Dockerfile for containerization
 requirements.txt        # Python dependencies
 README.md               # Project documentation
 .gitignore              # Specifies files and directories to ignore in Git
+streamlit_app.py        # Streamlit user interface for predictions
 ```
 
 ## Setup and Run
@@ -116,6 +117,17 @@ With the Flask API running locally (as described in step 6 above), you can test 
     }
     ```
     (Note: `prediction` and `probability` values will depend on your model's output for the given input.)
+
+## Streamlit UI
+
+The Streamlit application (`streamlit_app.py`) provides an interactive web interface for making predictions using the Flask API.
+
+1.  **Run the Streamlit application locally:**
+    Ensure your virtual environment is activated and the Flask API is running (as described in step 6 under "Setup and Run"), then run:
+    ```bash
+    streamlit run streamlit_app.py
+    ```
+    The UI will open in your browser, typically at `http://localhost:8501`.
 
 ## Dockerization
 
