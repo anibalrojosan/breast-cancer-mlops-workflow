@@ -16,7 +16,9 @@ tests/                  # For unit and integration tests
 .github/                # GitHub Actions workflow files
   workflows/
     main.yml          # CI/CD pipeline definition
-Dockerfile              # Dockerfile for containerization
+Dockerfile.api          # Dockerfile for the Flask API container
+Dockerfile.streamlit    # Dockerfile for the Streamlit UI container
+docker-compose.yml      # Defines and links multi-container Docker application
 requirements.txt        # Python dependencies
 README.md               # Project documentation
 .gitignore              # Specifies files and directories to ignore in Git
@@ -131,20 +133,21 @@ The Streamlit application (`streamlit_app.py`) provides an interactive web inter
 
 ## Dockerization
 
-The project includes a `Dockerfile` to containerize the Flask API and the trained model.
+The project now uses Docker Compose to manage both the Flask API and the Streamlit UI.
 
-1.  **Build the Docker image:**
+1.  **Build and Run with Docker Compose:**
+    Ensure the model is trained (`models/model.joblib` exists), then navigate to the project root and run:
     ```bash
-    docker build -t breast-cancer-api .
+    docker-compose up --build -d
     ```
+    This will build images for `Dockerfile.api` and `Dockerfile.streamlit`, and start both services.
+    The Flask API will be accessible via `http://localhost:5000/` and the Streamlit UI via `http://localhost:8501/`.
 
-2.  **Run the Docker container:**
+2.  **Stop Docker Compose services:**
     ```bash
-    docker run -d -p 5000:5000 --name breast-cancer-api-ctr breast-cancer-api
+    docker-compose down
     ```
-    The API will be accessible via `http://127.0.0.1:5000/`.
-
-3.  **Test the API (using commands from "API Usage Examples" above).**
+    This will stop and remove all services and their networks.
 
 ## Automated CI/CD (GitHub Actions)
 
@@ -154,13 +157,12 @@ A GitHub Actions workflow (`.github/workflows/main.yml`) is configured to automa
 2.  **Set up Python and install dependencies:** Prepares the environment for model training.
 3.  **Create `models/` directory:** Ensures the directory exists for saving the trained model.
 4.  **Train the model:** Runs `src/model.py` to train the model and generate `models/model.joblib`.
-5.  **Build Docker image:** Creates the Docker image for the API.
-6.  **Login to Docker Hub:** Authenticates using GitHub Secrets.
-7.  **Push Docker image:** Pushes the built image to your Docker Hub repository.
-8.  **Run container (for testing):** Starts the newly pushed Docker image as a container.
-9.  **Wait for API to be ready:** A robust loop that polls the `/` endpoint until the API responds.
-10. **Test health and prediction endpoints:** Executes `curl` commands to verify API functionality.
-11. **Clean up Docker container:** Stops and removes the test container.
+5.  **Build and Push Docker Compose Images:** Builds both API (`Dockerfile.api`) and Streamlit UI (`Dockerfile.streamlit`) images and pushes them to Docker Hub.
+6.  **Run Docker Compose services (for testing):** Starts both the API and Streamlit UI services in isolated containers.
+7.  **Wait for services to be ready:** A robust loop that polls both API (`/`) and Streamlit UI (`/`) endpoints until both are responsive.
+8.  **Test health and prediction endpoints:** Executes `curl` commands to verify Flask API functionality.
+9.  **Test Streamlit UI is accessible:** Executes `curl` command to verify Streamlit UI responsiveness.
+10. **Clean up Docker Compose services:** Stops and removes all test containers and networks.
 
 ## Future Improvements
 

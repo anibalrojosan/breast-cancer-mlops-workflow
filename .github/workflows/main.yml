@@ -38,28 +38,40 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Build and push Docker image
-      uses: docker/build-push-action@v5
-      with:
-        context: .
-        push: true
-        tags: ${{ secrets.DOCKER_USERNAME }}/breast-cancer-api:latest
+    - name: Build and push Docker Compose services
+      run: docker-compose build
 
-    - name: Run container (for testing)
-      run: docker run -d -p 5000:5000 --name breast-cancer-api-test ${{ secrets.DOCKER_USERNAME }}/breast-cancer-api:latest
-
-    - name: Wait for API to be ready
+    - name: Push Docker Compose images
       run: |
-        sleep 10
-        for i in $(seq 1 10); do
+        docker push ${{ secrets.DOCKER_USERNAME }}/breast-cancer-api:latest
+        docker push ${{ secrets.DOCKER_USERNAME }}/breast-cancer-streamlit:latest
+
+    - name: Run Docker Compose services (for testing)
+      run: docker-compose up -d
+
+    - name: Wait for services to be ready
+      run: |
+        echo "Waiting for Flask API (port 5000)..."
+        for i in $(seq 1 30); do
           if curl -s http://localhost:5000/; then
-            echo "API is ready!"
-            exit 0
+            echo "Flask API is ready!"
+            break
           fi
           echo "Waiting for API... (Attempt $i)"
-          sleep 5
+          sleep 2
         done
-        echo "API did not become ready in time."
+
+        echo "Waiting for Streamlit UI (port 8501)..."
+        for i in $(seq 1 30); do
+          if curl -s http://localhost:8501/; then
+            echo "Streamlit UI is ready!"
+            exit 0
+          fi
+          echo "Waiting for Streamlit... (Attempt $i)"
+          sleep 2
+        done
+
+        echo "Services did not become ready in time."
         exit 1
 
     - name: Test health endpoint
@@ -103,6 +115,9 @@ jobs:
         EOF
         curl -X POST -H "Content-Type: application/json" -d @payload.json http://localhost:5000/predict
 
-    - name: Clean up Docker container
+    - name: Test Streamlit UI is accessible
+      run: curl http://localhost:8501/
+
+    - name: Clean up Docker Compose services
       if: always()
-      run: docker rm -f breast-cancer-api-test
+      run: docker-compose down
