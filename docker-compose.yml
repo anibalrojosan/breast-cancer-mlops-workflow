@@ -5,6 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.api
+    image: ${{ secrets.DOCKER_USERNAME }}/breast-cancer-api:latest
     ports:
       - "5000:5000"
     # Optional: command to run the Flask app, if not handled by Dockerfile's CMD
@@ -14,6 +15,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.streamlit
+    image: ${{ secrets.DOCKER_USERNAME }}/breast-cancer-streamlit:latest
     ports:
       - "8501:8501"
     environment:
