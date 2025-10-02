@@ -8,6 +8,8 @@ on:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+    env:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
 
     steps:
     - name: Checkout code
@@ -44,15 +46,15 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Build and push Docker Compose services
-      run: DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }} docker-compose build
+      run: docker-compose build
 
     - name: Push Docker Compose images
       run: |
-        docker push ${{ secrets.DOCKER_USERNAME }}/breast-cancer-api:latest
-        docker push ${{ secrets.DOCKER_USERNAME }}/breast-cancer-streamlit:latest
+        docker push $DOCKER_USERNAME/breast-cancer-api:latest
+        docker push $DOCKER_USERNAME/breast-cancer-streamlit:latest
 
     - name: Run Docker Compose services (for testing)
-      run: DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }} docker-compose up -d
+      run: docker-compose up -d
 
     - name: Wait for services to be ready
       run: |
@@ -125,4 +127,4 @@ jobs:
 
     - name: Clean up Docker Compose services
       if: always()
-      run: DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }} docker-compose down
+      run: docker-compose down
