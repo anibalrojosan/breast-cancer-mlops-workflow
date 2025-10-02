@@ -1,10 +1,11 @@
 import streamlit as st
 import requests
+import os
 
 st.set_page_config(layout='wide')
 st.title('Breast Cancer Prediction')
 
-API_URL = "http://localhost:5000/predict"
+API_URL = os.getenv("API_URL", "http://localhost:5000/predict")
 
 st.write('Please enter the patient\'s characteristics to get a breast cancer prediction.')
 
