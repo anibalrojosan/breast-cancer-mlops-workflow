@@ -5,24 +5,35 @@ This project demonstrates a foundational MLOps workflow for deploying a Breast C
 ## Project Structure
 
 ```
-.venv/                  # Python virtual environment (ignored by Git)
-data/                   # Stores the dataset (data.csv) - Tracked by Git for CI/CD simplicity
-models/                 # Stores the trained model (model.joblib) - Ignored by Git
-notebooks/              # For exploratory data analysis and experimentation
-src/
-  app.py              # Flask API for model inference
-  model.py            # Script for training and saving the model
-tests/                  # For unit and integration tests
-.github/                # GitHub Actions workflow files
-  workflows/
-    main.yml          # CI/CD pipeline definition
-Dockerfile.api          # Dockerfile for the Flask API container
-Dockerfile.streamlit    # Dockerfile for the Streamlit UI container
-docker-compose.yml      # Defines and links multi-container Docker application
-requirements.txt        # Python dependencies
-README.md               # Project documentation
-.gitignore              # Specifies files and directories to ignore in Git
-streamlit_app.py        # Streamlit user interface for predictions
+breast-cancer-ops/
+├── .github/                # GitHub Actions workflow files
+│   └── workflows/
+│       └── main.yml       # CI/CD pipeline definition
+├── config/                # Configuration files
+│   ├── docker-compose.yml # Defines and links multi-container Docker application
+│   ├── Dockerfile.api     # Dockerfile for the Flask API container
+│   └── Dockerfile.streamlit # Dockerfile for the Streamlit UI container
+├── data/                  # Stores the dataset (data.csv) - Tracked by Git for CI/CD simplicity
+│   └── data.csv
+├── docs/                  # Project documentation (optional)
+├── logs/                  # Application logs
+│   └── api_logs.log
+├── models/                # Stores the trained model (model.joblib) - Ignored by Git
+│   └── model.joblib
+├── notebooks/             # For exploratory data analysis and experimentation
+├── scripts/               # Utility and test scripts
+│   ├── bash_test.sh
+│   └── powershell_test.ps1
+├── src/                   # Source code
+│   ├── app.py            # Flask API for model inference
+│   ├── model.py          # Script for training and saving the model
+│   └── streamlit_app.py  # Streamlit user interface for predictions
+├── tests/                 # For unit and integration tests
+│   └── sample_payload.json
+├── .env.example          # Environment variables template
+├── .gitignore            # Specifies files and directories to ignore in Git
+├── README.md             # Project documentation
+└── requirements.txt      # Python dependencies
 ```
 
 ## Setup and Run
@@ -122,30 +133,30 @@ With the Flask API running locally (as described in step 6 above), you can test 
 
 ## Streamlit UI
 
-The Streamlit application (`streamlit_app.py`) provides an interactive web interface for making predictions using the Flask API.
+The Streamlit application (`src/streamlit_app.py`) provides an interactive web interface for making predictions using the Flask API.
 
 1.  **Run the Streamlit application locally:**
     Ensure your virtual environment is activated and the Flask API is running (as described in step 6 under "Setup and Run"), then run:
     ```bash
-    streamlit run streamlit_app.py
+    streamlit run src/streamlit_app.py
     ```
     The UI will open in your browser, typically at `http://localhost:8501`.
 
 ## Dockerization
 
-The project now uses Docker Compose to manage both the Flask API and the Streamlit UI.
+The project now uses Docker Compose to manage both the Flask API and the Streamlit UI. All Docker configuration files are located in the `config/` directory.
 
 1.  **Build and Run with Docker Compose:**
     Ensure the model is trained (`models/model.joblib` exists), then navigate to the project root and run:
     ```bash
-    docker-compose up --build -d
+    docker-compose -f config/docker-compose.yml up --build -d
     ```
-    This will build images for `Dockerfile.api` and `Dockerfile.streamlit`, and start both services.
+    This will build images for `config/Dockerfile.api` and `config/Dockerfile.streamlit`, and start both services.
     The Flask API will be accessible via `http://localhost:5000/` and the Streamlit UI via `http://localhost:8501/`.
 
 2.  **Stop Docker Compose services:**
     ```bash
-    docker-compose down
+    docker-compose -f config/docker-compose.yml down
     ```
     This will stop and remove all services and their networks.
 
@@ -157,7 +168,7 @@ A GitHub Actions workflow (`.github/workflows/main.yml`) is configured to automa
 2.  **Set up Python and install dependencies:** Prepares the environment for model training.
 3.  **Create `models/` directory:** Ensures the directory exists for saving the trained model.
 4.  **Train the model:** Runs `src/model.py` to train the model and generate `models/model.joblib`.
-5.  **Build and Push Docker Compose Images:** Builds both API (`Dockerfile.api`) and Streamlit UI (`Dockerfile.streamlit`) images and pushes them to Docker Hub.
+5.  **Build and Push Docker Compose Images:** Builds both API (`config/Dockerfile.api`) and Streamlit UI (`config/Dockerfile.streamlit`) images and pushes them to Docker Hub.
 6.  **Run Docker Compose services (for testing):** Starts both the API and Streamlit UI services in isolated containers.
 7.  **Wait for services to be ready:** A robust loop that polls both API (`/`) and Streamlit UI (`/`) endpoints until both are responsive.
 8.  **Test health and prediction endpoints:** Executes `curl` commands to verify Flask API functionality.
