@@ -4,7 +4,7 @@ services:
   api:
     build:
       context: .
-      dockerfile: Dockerfile.api
+      dockerfile: config/Dockerfile.api
     image: $DOCKER_USERNAME/breast-cancer-api:latest
     ports:
       - "5000:5000"
@@ -14,7 +14,7 @@ services:
   streamlit_ui:
     build:
       context: .
-      dockerfile: Dockerfile.streamlit
+      dockerfile: config/Dockerfile.streamlit
     image: $DOCKER_USERNAME/breast-cancer-streamlit:latest
     ports:
       - "8501:8501"
