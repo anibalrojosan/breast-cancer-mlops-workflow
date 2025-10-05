@@ -6,34 +6,22 @@ This project demonstrates a foundational MLOps workflow for deploying a Breast C
 
 ```
 breast-cancer-ops/
-├── .github/                # GitHub Actions workflow files
-│   └── workflows/
-│       └── main.yml       # CI/CD pipeline definition
-├── config/                # Configuration files
-│   ├── docker-compose.yml # Defines and links multi-container Docker application
-│   ├── Dockerfile.api     # Dockerfile for the Flask API container
-│   └── Dockerfile.streamlit # Dockerfile for the Streamlit UI container
-├── data/                  # Stores the dataset (data.csv) - Tracked by Git for CI/CD simplicity
+├── config/                    # Configuration files
+│   ├── docker-compose.yml    # Defines and links multi-container Docker application
+│   ├── Dockerfile.api        # Dockerfile for the Flask API container
+│   └── Dockerfile.streamlit  # Dockerfile for the Streamlit UI container
+├── data/                      # Stores the dataset
 │   └── data.csv
-├── docs/                  # Project documentation (optional)
-├── logs/                  # Application logs
-│   └── api_logs.log
-├── models/                # Stores the trained model (model.joblib) - Ignored by Git
-│   └── model.joblib
-├── notebooks/             # For exploratory data analysis and experimentation
-├── scripts/               # Utility and test scripts
+├── src/                       # Source code
+│   ├── app.py                # Flask API for model inference
+│   ├── model.py              # Script for training and saving the model
+│   └── streamlit_app.py      # Streamlit user interface for predictions
+├── tests/                     # For unit and integration tests
 │   ├── bash_test.sh
-│   └── powershell_test.ps1
-├── src/                   # Source code
-│   ├── app.py            # Flask API for model inference
-│   ├── model.py          # Script for training and saving the model
-│   └── streamlit_app.py  # Streamlit user interface for predictions
-├── tests/                 # For unit and integration tests
+│   ├── powershell_test.ps1
 │   └── sample_payload.json
-├── .env.example          # Environment variables template
-├── .gitignore            # Specifies files and directories to ignore in Git
-├── README.md             # Project documentation
-└── requirements.txt      # Python dependencies
+├── README.md                  # Project documentation
+└── requirements.txt           # Python dependencies
 ```
 
 ## Setup and Run
