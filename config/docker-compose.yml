@@ -3,17 +3,15 @@ version: '3.8'
 services:
   api:
     build:
-      context: .
+      context: ..
       dockerfile: config/Dockerfile.api
     image: $DOCKER_USERNAME/breast-cancer-api:latest
     ports:
       - "5000:5000"
-    # Optional: command to run the Flask app, if not handled by Dockerfile's CMD
-    # command: python src/app.py
 
   streamlit_ui:
     build:
-      context: .
+      context: ..
       dockerfile: config/Dockerfile.streamlit
     image: $DOCKER_USERNAME/breast-cancer-streamlit:latest
     ports:
@@ -22,5 +20,3 @@ services:
       - API_URL=http://api:5000/predict
     depends_on:
       - api
-    # Optional: command to run the Streamlit app, if not handled by Dockerfile.streamlit's CMD
-    # command: streamlit run streamlit_app.py --server.port=8501 --server.address=0.0.0.0
