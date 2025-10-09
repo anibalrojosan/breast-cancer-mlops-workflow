@@ -6,7 +6,7 @@ COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY src/streamlit_app.py .
+COPY src/ ./src/
 
 EXPOSE 8501
 
