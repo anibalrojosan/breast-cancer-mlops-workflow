@@ -2,9 +2,6 @@ import joblib
 import pandas as pd
 import os
 
-# Ensure the data_preprocessing module is accessible for FunctionTransformer if it was pickled
-# This might not be strictly necessary if FunctionTransformer only relies on the function definition itself
-# but good practice to have the context
 from .data_preprocessing import drop_unnecessary_columns
 
 def load_pipeline(model_path='models/model.joblib'):

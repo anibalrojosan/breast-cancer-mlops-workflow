@@ -1,5 +1,6 @@
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import FunctionTransformer
+from sklearn.preprocessing import MinMaxScaler
 from sklearn.ensemble import RandomForestClassifier
 import pandas as pd
 
@@ -11,7 +12,7 @@ def create_breast_cancer_pipeline():
     # Define preprocessing steps
     preprocessing_pipeline = Pipeline([
         ('drop_cols', FunctionTransformer(drop_unnecessary_columns, validate=False)),
-        # Add other preprocessing steps here if needed, e.g., scaling
+        ('scaler', MinMaxScaler()),
     ])
 
     # Combine preprocessing and model into a full pipeline
