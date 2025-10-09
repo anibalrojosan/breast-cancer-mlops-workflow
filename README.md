@@ -12,9 +12,17 @@ breast-cancer-ops/
 │   └── Dockerfile.streamlit  # Dockerfile for the Streamlit UI container
 ├── data/                      # Stores the dataset
 │   └── data.csv
+├── models/                    # Stores the trained model pipeline (created locally)
+│   └── model.joblib
 ├── src/                       # Source code
 │   ├── app.py                # Flask API for model inference
-│   ├── model.py              # Script for training and saving the model
+│   ├── model/                # Machine Learning model components
+│   │   ├── __init__.py           # Makes 'model' a Python package
+│   │   ├── data_ingestion.py     # Handles raw data loading
+│   │   ├── data_preprocessing.py # Contains data cleaning and feature preparation
+│   │   ├── model_inference.py    # Loads trained pipeline and makes predictions
+│   │   ├── model_training.py     # Orchestrates model training and pipeline saving
+│   │   └── pipeline_utils.py     # Defines the scikit-learn pipeline structure
 │   └── streamlit_app.py      # Streamlit user interface for predictions
 ├── tests/                     # For unit and integration tests
 │   ├── bash_test.sh
@@ -33,6 +41,7 @@ breast-cancer-ops/
     ```
 
 2.  **Create and activate a virtual environment:**
+    
     *For Windows*:
     ```powershell
     python -m venv .venv
@@ -54,17 +63,18 @@ breast-cancer-ops/
 4.  **Dataset Availability:**
     The `data/data.csv` dataset is committed directly to this repository. No separate download or manual directory creation is required after cloning.
 
-5.  **Train the model:**
+5.  **Train the Machine Learning Pipeline:**
+    This step will load `data/data.csv`, preprocess it, train the Random Forest classifier within a `scikit-learn` pipeline, evaluate it, and then save the complete trained pipeline to `models/model.joblib`.
     Ensure your virtual environment is activated and `data/data.csv` is present, then run:
-    ```bash
-    python src/model.py
+    ```powershell
+    python -m src.model.model_training
     ```
-    This will train the model and save it as `models/model.joblib`.
+    This will train the pipeline and save it as `models/model.joblib`.
 
 6.  **Run the Flask API locally:**
-    Ensure your virtual environment is activated and the model is trained (`models/model.joblib` exists), then run:
+    Ensure your virtual environment is activated and the model pipeline is trained (`models/model.joblib` exists), then run:
     ```bash
-    python src/app.py
+    python -m src.app
     ```
     The API will be accessible at `http://127.0.0.1:5000/`. Keep this running in one terminal.
 
@@ -137,14 +147,14 @@ The project now uses Docker Compose to manage both the Flask API and the Streaml
 1.  **Build and Run with Docker Compose:**
     Ensure the model is trained (`models/model.joblib` exists), then navigate to the project root and run:
     ```bash
-    docker-compose -f config/docker-compose.yml up --build -d
+    docker compose -f config/docker-compose.yml up --build -d
     ```
     This will build images for `config/Dockerfile.api` and `config/Dockerfile.streamlit`, and start both services.
     The Flask API will be accessible via `http://localhost:5000/` and the Streamlit UI via `http://localhost:8501/`.
 
 2.  **Stop Docker Compose services:**
     ```bash
-    docker-compose -f config/docker-compose.yml down
+    docker compose -f config/docker-compose.yml down
     ```
     This will stop and remove all services and their networks.
 
@@ -155,7 +165,7 @@ A GitHub Actions workflow (`.github/workflows/main.yml`) is configured to automa
 1.  **Checkout code:** Gets the latest code from the repository.
 2.  **Set up Python and install dependencies:** Prepares the environment for model training.
 3.  **Create `models/` directory:** Ensures the directory exists for saving the trained model.
-4.  **Train the model:** Runs `src/model.py` to train the model and generate `models/model.joblib`.
+4.  **Train the model:** Runs `python -m src.model.model_training` to train the model and generate `models/model.joblib`.
 5.  **Build and Push Docker Compose Images:** Builds both API (`config/Dockerfile.api`) and Streamlit UI (`config/Dockerfile.streamlit`) images and pushes them to Docker Hub.
 6.  **Run Docker Compose services (for testing):** Starts both the API and Streamlit UI services in isolated containers.
 7.  **Wait for services to be ready:** A robust loop that polls both API (`/`) and Streamlit UI (`/`) endpoints until both are responsive.
@@ -167,7 +177,6 @@ A GitHub Actions workflow (`.github/workflows/main.yml`) is configured to automa
 
 To further enhance this MLOps project, consider these advanced steps:
 
-1.  **Preprocessing Pipeline in `src/model.py`:** Integrate data preprocessing steps directly into a `sklearn.pipeline.Pipeline` object. Save the entire pipeline (including preprocessing and the model) to ensure consistent data transformations between training and inference.
+1.  **Unit Testing:** Develop comprehensive unit tests using `pytest` for components in `src/model/` (e.g., data loading, specific preprocessing functions) and `src/app.py` (e.g., API route logic using `Flask.test_client()`).
 2.  **Input Data Schema Validation in `src/app.py`:** Implement a library like `Pydantic` to define a strict and explicit schema for incoming JSON payloads to the `/predict` endpoint, providing robust data validation and clear error messages.
 3.  **Multi-stage Docker Builds:** Optimize the `Dockerfile` by using multi-stage builds. The idea is to reduce the final image size by separating build-time dependencies (e.g., for training) from runtime dependencies (e.g., for serving the API).
-4.  **Unit Testing:** Develop comprehensive unit tests using `pytest` for components in `src/model.py` (e.g., data loading, specific preprocessing functions) and `src/app.py` (e.g., API route logic using `Flask.test_client()`).

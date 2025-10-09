@@ -29,7 +29,7 @@ jobs:
       run: mkdir -p models
 
     - name: Train the model
-      run: python -m src.model_training
+      run: python -m src.model.model_training
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
