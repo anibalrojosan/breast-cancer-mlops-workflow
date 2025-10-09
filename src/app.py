@@ -4,6 +4,7 @@ import pandas as pd
 import logging
 import sys # Import sys
 import os
+from src.model.pipeline_utils import create_breast_cancer_pipeline
 
 # Configure logging
 log_file_path = 'api_logs.log'
