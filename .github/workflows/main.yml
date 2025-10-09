@@ -46,7 +46,7 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Build and push Docker Compose services
-      run: docker-compose -f config/docker-compose.yml build
+      run: docker compose -f config/docker-compose.yml build
 
     - name: Push Docker Compose images
       run: |
@@ -54,7 +54,7 @@ jobs:
         docker push $DOCKER_USERNAME/breast-cancer-streamlit:latest
 
     - name: Run Docker Compose services (for testing)
-      run: docker-compose -f config/docker-compose.yml up -d
+      run: docker compose -f config/docker-compose.yml up -d
 
     - name: Wait for services to be ready
       run: |
@@ -127,4 +127,4 @@ jobs:
 
     - name: Clean up Docker Compose services
       if: always()
-      run: docker-compose -f config/docker-compose.yml down
+      run: docker compose -f config/docker-compose.yml down
