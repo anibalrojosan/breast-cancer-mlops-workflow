@@ -28,6 +28,7 @@ breast-cancer-ops/
 │   ├── bash_test.sh
 │   ├── powershell_test.ps1
 │   └── sample_payload.json
+├── pytest.ini                 # pytest configuration
 ├── README.md                  # Project documentation
 └── requirements.txt           # Python dependencies
 ```
