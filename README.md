@@ -27,6 +27,8 @@ breast-cancer-ops/
 ├── tests/                     # For unit and integration tests
 │   ├── bash_test.sh
 │   ├── powershell_test.ps1
+│   ├── unit/
+│   │   └── test_data_ingestion.py
 │   └── sample_payload.json
 ├── pytest.ini                 # pytest configuration
 ├── README.md                  # Project documentation
@@ -78,6 +80,20 @@ breast-cancer-ops/
     python -m src.app
     ```
     The API will be accessible at `http://127.0.0.1:5000/`. Keep this running in one terminal.
+
+## Testing
+
+This project uses `pytest` for unit testing. The tests are located in the `tests/` directory.
+
+1.  **Run all tests:**
+    Ensure you have installed the dependencies from `requirements.txt` (which includes `pytest`). Then, from the project root directory, run:
+    ```bash
+    pytest
+    ```
+    `pytest` will automatically discover and run all test files. For more detailed output, use the verbose flag:
+    ```bash
+    pytest -v
+    ```
 
 ## API Usage Examples
 
@@ -178,6 +194,5 @@ A GitHub Actions workflow (`.github/workflows/main.yml`) is configured to automa
 
 To further enhance this MLOps project, consider these advanced steps:
 
-1.  **Unit Testing:** Develop comprehensive unit tests using `pytest` for components in `src/model/` (e.g., data loading, specific preprocessing functions) and `src/app.py` (e.g., API route logic using `Flask.test_client()`).
-2.  **Input Data Schema Validation in `src/app.py`:** Implement a library like `Pydantic` to define a strict and explicit schema for incoming JSON payloads to the `/predict` endpoint, providing robust data validation and clear error messages.
-3.  **Multi-stage Docker Builds:** Optimize the `Dockerfile` by using multi-stage builds. The idea is to reduce the final image size by separating build-time dependencies (e.g., for training) from runtime dependencies (e.g., for serving the API).
+1.  **Input Data Schema Validation in `src/app.py`:** Implement a library like `Pydantic` to define a strict and explicit schema for incoming JSON payloads to the `/predict` endpoint, providing robust data validation and clear error messages.
+2.  **Multi-stage Docker Builds:** Optimize the `Dockerfile` by using multi-stage builds. The idea is to reduce the final image size by separating build-time dependencies (e.g., for training) from runtime dependencies (e.g., for serving the API).

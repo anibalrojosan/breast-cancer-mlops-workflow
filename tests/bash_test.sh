@@ -1,8 +1,11 @@
-#!/usr/bin/env bash
-set -euo pipefail
+#!/bin/bash
+# This script sends a sample request to the prediction endpoint.
 
-echo "Health check..."
-curl -s http://127.0.0.1:5000/ | jq . || curl -s http://127.0.0.1:5000/
+echo "Testing prediction endpoint with sample_payload.json..."
 
-echo "Predict..."
-curl -s -X POST -H "Content-Type: application/json" -d @tests/sample_payload.json http://127.0.0.1:5000/predict | jq . || curl -s -X POST -H "Content-Type: application/json" -d @tests/sample_payload.json http://127.0.0.1:5000/predict
+curl -X POST \
+  -H "Content-Type: application/json" \
+  -d @tests/sample_payload.json \
+  http://127.0.0.1:5000/predict
+
+echo -e "\nDone."
