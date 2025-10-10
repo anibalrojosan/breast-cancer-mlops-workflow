@@ -18,7 +18,7 @@ def sample_data_1():
 def sample_data_2():
     'Provides a sample dataframe for testing preprocessing functions'
     data = {
-        'diagnosis': ['M', 'B', 'M'],
+#        'diagnosis': ['M', 'B', 'M'],
         'feature_1': [0.1, 0.2, 0.3],
         'feature_2': [0.4, 0.5, 0.6],
         'feature_3': [0.7, 0.8, 0.9],

@@ -25,11 +25,18 @@ breast-cancer-ops/
 │   │   └── pipeline_utils.py     # Defines the scikit-learn pipeline structure
 │   └── streamlit_app.py      # Streamlit user interface for predictions
 ├── tests/                     # For unit and integration tests
+│   ├── __init__.py            # Makes 'tests' a Python package
+│   ├── conftest.py            # Shared pytest fixtures across test files
 │   ├── bash_test.sh
 │   ├── powershell_test.ps1
+│   ├── sample_payload.json    # For API/integration tests
 │   ├── unit/
-│   │   └── test_data_ingestion.py
-│   └── sample_payload.json
+│   │   ├── __init__.py           # Makes 'unit' a Python package
+│   │   ├── dat-ingestion/       # Tests for src/model/dat-ingestion.py
+│   │   │   └── test_dat-ingestion.py
+│   │   ├── data_preprocessing/   # Tests for src/model/data_preprocessing.py
+│   │   │   ├── test_drop_unnecessary_columns.py
+│   │   │   └── test_map_diagnosis_to_numerical.py
 ├── pytest.ini                 # pytest configuration
 ├── README.md                  # Project documentation
 └── requirements.txt           # Python dependencies
