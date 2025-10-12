@@ -37,6 +37,7 @@ breast-cancer-ops/
 │   │   ├── data_preprocessing/   # Tests for src/model/data_preprocessing.py
 │   │   │   ├── test_drop_unnecessary_columns.py
 │   │   │   └── test_map_diagnosis_to_numerical.py
+│   │   │   └── test_prepare_features_and_target.py
 ├── pytest.ini                 # pytest configuration
 ├── README.md                  # Project documentation
 └── requirements.txt           # Python dependencies

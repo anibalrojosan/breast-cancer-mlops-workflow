@@ -29,3 +29,14 @@ def sample_data_2():
 def empty_data():
     'Provides an empty dataframe for testing preprocessing functions'
     return pd.DataFrame(columns=['id', 'diagnosis', 'feature_1', 'feature_2', 'feature_3', 'Unnamed: 32'])
+
+@pytest.fixture
+def sample_data_3():
+    'Provides a sample dataframe for testing prepare_features_and_target function'
+    data = {
+        'diagnosis': [1, 0, 1],
+        'feature_1': [0.1, 0.2, 0.3],
+        'feature_2': [0.4, 0.5, 0.6],
+        'feature_3': [0.7, 0.8, 0.9],
+    }
+    return pd.DataFrame(data)
