@@ -7,34 +7,36 @@ This project demonstrates a foundational MLOps workflow for deploying a Breast C
 ```
 breast-cancer-ops/
 ├── config/                    # Configuration files
-│   ├── docker-compose.yml    # Defines and links multi-container Docker application
-│   ├── Dockerfile.api        # Dockerfile for the Flask API container
-│   └── Dockerfile.streamlit  # Dockerfile for the Streamlit UI container
+│   ├── docker-compose.yml     # Defines and links multi-container Docker application
+│   ├── Dockerfile.api         # Dockerfile for the Flask API container
+│   └── Dockerfile.streamlit   # Dockerfile for the Streamlit UI container
 ├── data/                      # Stores the dataset
 │   └── data.csv
 ├── models/                    # Stores the trained model pipeline (created locally)
 │   └── model.joblib
 ├── src/                       # Source code
-│   ├── app.py                # Flask API for model inference
-│   ├── model/                # Machine Learning model components
-│   │   ├── __init__.py           # Makes 'model' a Python package
-│   │   ├── data_ingestion.py     # Handles raw data loading
-│   │   ├── data_preprocessing.py # Contains data cleaning and feature preparation
-│   │   ├── model_inference.py    # Loads trained pipeline and makes predictions
-│   │   ├── model_training.py     # Orchestrates model training and pipeline saving
-│   │   └── pipeline_utils.py     # Defines the scikit-learn pipeline structure
-│   └── streamlit_app.py      # Streamlit user interface for predictions
+│   ├── app.py                 # Flask API for model inference
+│   ├── model/                 # Machine Learning model components
+│   │   ├── __init__.py            # Makes 'model' a Python package
+│   │   ├── dat-ingestion.py      # Handles raw data loading
+│   │   ├── data_preprocessing.py  # Contains data cleaning and feature preparation
+│   │   ├── model_inference.py     # Loads trained pipeline and makes predictions
+│   │   ├── model_training.py      # Orchestrates model training and pipeline saving
+│   │   └── pipeline_utils.py      # Defines the scikit-learn pipeline structure
+│   └── streamlit_app.py       # Streamlit user interface for predictions
 ├── tests/                     # For unit and integration tests
 │   ├── __init__.py            # Makes 'tests' a Python package
 │   ├── conftest.py            # Shared pytest fixtures across test files
-│   ├── bash_test.sh
-│   ├── powershell_test.ps1
-│   ├── sample_payload.json    # For API/integration tests
+│   ├── fixtures/
+│   │   └── sample_payload.json    # For API/integration tests
+│   ├── integration/
+│   │   ├── bash_test.sh           # For Linux/macOS or Git Bash
+│   │   └── powershell_test.ps1    # For Windows PowerShell
 │   ├── unit/
-│   │   ├── __init__.py           # Makes 'unit' a Python package
-│   │   ├── dat-ingestion/       # Tests for src/model/dat-ingestion.py
+│   │   ├── __init__.py            # Makes 'unit' a Python package
+│   │   ├── dat-ingestion/        # Tests for src/model/dat-ingestion.py
 │   │   │   └── test_dat-ingestion.py
-│   │   ├── data_preprocessing/   # Tests for src/model/data_preprocessing.py
+│   │   ├── data_preprocessing/    # Tests for src/model/data_preprocessing.py
 │   │   │   ├── test_drop_unnecessary_columns.py
 │   │   │   └── test_map_diagnosis_to_numerical.py
 │   │   │   └── test_prepare_features_and_target.py
@@ -128,21 +130,23 @@ With the Flask API running locally (as described in step 6 above), you can test 
 
 *   **Endpoint:** `POST http://127.0.0.1:5000/predict`
 *   **Purpose:** Receives a JSON payload of features and returns a prediction.
-*   **Request Body Example:** `tests/sample_payload.json`
+*   **Request Body Example:** `tests/fixtures/sample_payload.json`
 
-*   **Example Usage:**
+*   **Example Usage via Test Scripts:**
 
-    **PowerShell:**
-    ```powershell
-    $headers = @{"Content-Type"="application/json"}
-    $body = Get-Content -Raw -Path "tests/sample_payload.json" | ConvertFrom-Json
-    Invoke-RestMethod -Uri "http://127.0.0.1:5000/predict" -Method Post -Headers $headers -Body (ConvertTo-Json $body)
-    ```
+    To test the prediction endpoint using pre-configured scripts:
 
-    **cURL (Linux/macOS/Git Bash):**
+    **For Linux/macOS or Git Bash:**
     ```bash
-    curl -X POST -H "Content-Type: application/json" -d @tests/sample_payload.json http://127.0.0.1:5000/predict
+    ./tests/integration/bash_test.sh
     ```
+
+    **For Windows PowerShell:**
+    ```powershell
+    & ".\tests\integration\powershell_test.ps1"
+    ```
+
+    (Ensure the Flask API is running locally as described in step 6 under "Setup and Run" before running these scripts.)
 
     **Expected Output:**
     ```json
