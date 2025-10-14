@@ -5,7 +5,7 @@ echo "Testing prediction endpoint with sample_payload.json..."
 
 curl -X POST \
   -H "Content-Type: application/json" \
-  -d @tests/sample_payload.json \
+  -d @tests/fixtures/sample_payload.json \
   http://127.0.0.1:5000/predict
 
 echo -e "\nDone."

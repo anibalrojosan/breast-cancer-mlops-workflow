@@ -135,7 +135,7 @@ Once the environment is set up and dependencies are installed (using either `uv`
 
 ## API usage examples
 
-With the Flask API running locally (as described in the 'Run the Flask API locally' step under 'Running tests'), you can test its endpoints:
+With the Flask API running locally (as described in the 'Run the Flask API locally' step under 'Running tests'), you can test its endpoints in another terminal:
 
 ### 1. Health check (`GET /`)
 
@@ -146,6 +146,12 @@ With the Flask API running locally (as described in the 'Run the Flask API local
     ```powershell
     Invoke-RestMethod -Uri "http://127.0.0.1:5000/" -Method Get
     ```
+
+    **For Linux/macOS or Git Bash:**
+    ```bash
+    curl http://127.0.0.1:5000/
+    ```
+
     **Expected Output:**
     ```json
     {
@@ -162,16 +168,14 @@ With the Flask API running locally (as described in the 'Run the Flask API local
 
 *   **Example Usage via Test Scripts:**
 
-    To test the prediction endpoint using pre-configured scripts:
+    **For Windows PowerShell:**
+    ```powershell
+    & ".\tests\integration\powershell_test.ps1"
+    ```
 
     **For Linux/macOS or Git Bash:**
     ```bash
     ./tests/integration/bash_test.sh
-    ```
-
-    **For Windows PowerShell:**
-    ```powershell
-    & ".\tests\integration\powershell_test.ps1"
     ```
 
     (Ensure the Flask API is running locally as described in the 'Run the Flask API locally' step under 'Running tests' before running these scripts.)
