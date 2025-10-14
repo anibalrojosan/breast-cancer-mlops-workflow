@@ -45,55 +45,68 @@ breast-cancer-ops/
 └── requirements.txt           # Python dependencies
 ```
 
-## Setup and Run
+## Setup
 
-1.  **Clone the repository (if not already done):**
+Follow these steps to set up the project environment and install dependencies. You can use either `uv` (recommended for speed) or `pip`.
+
+### Option 1: Using `uv` (Recommended for faster setup)
+
+`uv` is a fast Python package installer and virtual environment manager written in Rust.
+
+1.  **Clone the repository:**
     ```bash
     git clone https://github.com/Anibalrojo/breast-cancer-mlops-workflow
     cd breast-cancer-ops
     ```
 
-2.  **Create and activate a virtual environment:**
-    
-    *For Windows*:
-    ```powershell
-    python -m venv .venv
-    .\\.venv\\Scripts\\Activate.ps1
+2.  **Install `uv` (if you don't have it):**
+    ```bash
+    pip install pipx
+    pipx ensurepath # Restart terminal after this
+    pipx install uv
     ```
 
-    *For Linux/macOS or Git Bash:*
+3.  **Create and activate virtual environment:**
     ```bash
-    python3 -m venv .venv
+    uv venv
+    # On Windows PowerShell:
+    .\.venv\Scripts\Activate.ps1
+    # On Linux/macOS:
+    source .venv/bin/activate
+    ```
+
+4.  **Install dependencies:**
+    ```bash
+    uv pip install -r requirements.txt
+    ```
+
+### Option 2: Using `pip`
+
+If you prefer to use `pip`, follow these steps:
+
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/Anibalrojo/breast-cancer-mlops-workflow
+    cd breast-cancer-ops
+    ```
+
+2.  **Create and activate virtual environment:**
+    ```bash
+    python -m venv .venv
+    # On Windows PowerShell:
+    .\.venv\Scripts\Activate.ps1
+    # On Linux/macOS:
     source .venv/bin/activate
     ```
 
 3.  **Install dependencies:**
-    Ensure your virtual environment is activated, then run:
     ```bash
     pip install -r requirements.txt
     ```
 
-4.  **Dataset Availability:**
-    The `data/data.csv` dataset is committed directly to this repository. No separate download or manual directory creation is required after cloning.
+## Running tests
 
-5.  **Train the Machine Learning Pipeline:**
-    This step will load `data/data.csv`, preprocess it, train the Random Forest classifier within a `scikit-learn` pipeline, evaluate it, and then save the complete trained pipeline to `models/model.joblib`.
-    Ensure your virtual environment is activated and `data/data.csv` is present, then run:
-    ```powershell
-    python -m src.model.model_training
-    ```
-    This will train the pipeline and save it as `models/model.joblib`.
-
-6.  **Run the Flask API locally:**
-    Ensure your virtual environment is activated and the model pipeline is trained (`models/model.joblib` exists), then run:
-    ```bash
-    python -m src.app
-    ```
-    The API will be accessible at `http://127.0.0.1:5000/`. Keep this running in one terminal.
-
-## Testing
-
-This project uses `pytest` for unit testing. The tests are located in the `tests/` directory.
+Once the environment is set up and dependencies are installed (using either `uv` or `pip`), you can run the tests:
 
 1.  **Run all tests:**
     Ensure you have installed the dependencies from `requirements.txt` (which includes `pytest`). Then, from the project root directory, run:
@@ -105,11 +118,11 @@ This project uses `pytest` for unit testing. The tests are located in the `tests
     pytest -v
     ```
 
-## API Usage Examples
+## API usage examples
 
-With the Flask API running locally (as described in step 6 above), you can test its endpoints:
+With the Flask API running locally (as described in step 6 under "Setup and Run"), you can test its endpoints:
 
-### 1. Health Check (`GET /`)
+### 1. Health check (`GET /`)
 
 *   **Endpoint:** `GET http://127.0.0.1:5000/`
 *   **Purpose:** Verifies that the service is running and the model is loaded.
@@ -173,7 +186,7 @@ The Streamlit application (`src/streamlit_app.py`) provides an interactive web i
 
 The project now uses Docker Compose to manage both the Flask API and the Streamlit UI. All Docker configuration files are located in the `config/` directory.
 
-1.  **Build and Run with Docker Compose:**
+1.  **Build and run with Docker Compose:**
     Ensure the model is trained (`models/model.joblib` exists), then navigate to the project root and run:
     ```bash
     docker compose -f config/docker-compose.yml up --build -d
@@ -202,7 +215,7 @@ A GitHub Actions workflow (`.github/workflows/main.yml`) is configured to automa
 9.  **Test Streamlit UI is accessible:** Executes `curl` command to verify Streamlit UI responsiveness.
 10. **Clean up Docker Compose services:** Stops and removes all test containers and networks.
 
-## Future Improvements
+## Future improvements
 
 To further enhance this MLOps project, consider these advanced steps:
 
