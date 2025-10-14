@@ -118,9 +118,24 @@ Once the environment is set up and dependencies are installed (using either `uv`
     pytest -v
     ```
 
+2.  **Train the Machine Learning Pipeline:**
+    This step will load `data/data.csv`, preprocess it, train the Random Forest classifier within a `scikit-learn` pipeline, evaluate it, and then save the complete trained pipeline to `models/model.joblib`. Ensure your virtual environment is activated and `data/data.csv` is present, then run:
+    ```powershell
+    python -m src.model.model_training
+    ```
+    This will train the pipeline and save it as `models/model.joblib`.
+
+3.  **Run the Flask API locally:**
+    Ensure your virtual environment is activated and the model pipeline is trained (`models/model.joblib` exists), then run:
+    ```bash
+    python -m src.app
+    ```
+    The API will be accessible at `http://127.0.0.1:5000/`. Keep this running in one terminal.
+
+
 ## API usage examples
 
-With the Flask API running locally (as described in step 6 under "Setup and Run"), you can test its endpoints:
+With the Flask API running locally (as described in the 'Run the Flask API locally' step under 'Running tests'), you can test its endpoints:
 
 ### 1. Health check (`GET /`)
 
@@ -159,7 +174,7 @@ With the Flask API running locally (as described in step 6 under "Setup and Run"
     & ".\tests\integration\powershell_test.ps1"
     ```
 
-    (Ensure the Flask API is running locally as described in step 6 under "Setup and Run" before running these scripts.)
+    (Ensure the Flask API is running locally as described in the 'Run the Flask API locally' step under 'Running tests' before running these scripts.)
 
     **Expected Output:**
     ```json
@@ -176,7 +191,7 @@ With the Flask API running locally (as described in step 6 under "Setup and Run"
 The Streamlit application (`src/streamlit_app.py`) provides an interactive web interface for making predictions using the Flask API.
 
 1.  **Run the Streamlit application locally:**
-    Ensure your virtual environment is activated and the Flask API is running (as described in step 6 under "Setup and Run"), then run:
+    Ensure your virtual environment is activated and the Flask API is running (as described in the 'Run the Flask API locally' step under 'Running tests'), then run:
     ```bash
     streamlit run src/streamlit_app.py
     ```
