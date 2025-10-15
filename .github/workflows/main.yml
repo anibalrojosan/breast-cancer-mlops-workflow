@@ -20,10 +20,15 @@ jobs:
       with:
         python-version: '3.12'
 
+    - name: Install uv
+      run: pip install uv
+
+    - name: Generate requirements.txt
+      run: uv pip compile pyproject.toml -o requirements.txt
+
     - name: Install Python dependencies for model training
       run: |
-        pip install --upgrade pip
-        pip install -r requirements.txt
+        uv pip install -r requirements.txt
 
     - name: Create models directory
       run: mkdir -p models
