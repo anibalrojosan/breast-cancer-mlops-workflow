@@ -2,7 +2,6 @@ import joblib
 import pandas as pd
 import os
 
-from .data_preprocessing import drop_unnecessary_columns
 
 def load_pipeline(model_path='models/model.joblib'):
     """Loads the trained scikit-learn pipeline."""
