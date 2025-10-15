@@ -27,6 +27,9 @@ jobs:
     - name: Generate requirements.txt
       run: uv pip compile pyproject.toml -o requirements.txt
 
+    - name: Create uv virtual environment
+      run: uv venv
+
     - name: Install Python dependencies for model training
       run: |
         uv pip install -r requirements.txt
