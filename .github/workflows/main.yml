@@ -1,10 +1,10 @@
+
 name: CI/CD Pipeline
 
 on:
   push:
     branches:
       - main
-      - feature/uv-ci-test
 
 jobs:
   build-and-push:
@@ -21,24 +21,16 @@ jobs:
       with:
         python-version: '3.12'
 
-    - name: Install uv
-      run: pip install uv
-
-    - name: Generate requirements.txt
-      run: uv pip compile pyproject.toml -o requirements.txt
-
-    - name: Create uv virtual environment
-      run: uv venv
-
     - name: Install Python dependencies for model training
       run: |
-        uv pip install -r requirements.txt
+        pip install --upgrade pip
+        pip install -r requirements.txt
 
     - name: Create models directory
       run: mkdir -p models
 
     - name: Train the model
-      run: uv run python -m src.model.model_training
+      run: python -m src.model.model_training
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
