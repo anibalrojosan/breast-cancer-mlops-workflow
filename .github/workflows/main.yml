@@ -1,9 +1,11 @@
+
 name: CI/CD Pipeline
 
 on:
   push:
     branches:
       - main
+      - feature/uv-ci-test
 
 jobs:
   build-and-push:
