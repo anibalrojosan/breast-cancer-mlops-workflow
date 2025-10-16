@@ -2,10 +2,9 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
-COPY pyproject.toml .
+COPY pyproject.toml uv.lock ./
 RUN pip install uv && \
-    uv pip compile pyproject.toml -o requirements.txt --system && \
-    uv pip install --no-cache-dir -r requirements.txt --system
+    uv sync --system --no-cache --frozen-lock
 
 COPY src/ ./src/
 COPY models/model.joblib ./models/
