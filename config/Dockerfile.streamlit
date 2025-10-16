@@ -4,8 +4,8 @@ WORKDIR /app
 
 COPY pyproject.toml .
 RUN pip install uv && \
-    uv pip compile pyproject.toml -o requirements.txt && \
-    uv pip install --no-cache-dir -r requirements.txt
+    uv pip compile pyproject.toml -o requirements.txt --system && \
+    uv pip install --no-cache-dir -r requirements.txt --system
 
 COPY src/ ./src/
 
