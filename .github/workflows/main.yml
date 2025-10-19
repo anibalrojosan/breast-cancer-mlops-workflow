@@ -33,6 +33,11 @@ jobs:
     - name: Train the model
       run: python -m src.model.model_training
 
+    - name: Verify model artifact exists
+      run: |
+        ls -l models || true
+        test -f models/model.joblib || (echo "Model artifact missing. Run training first." && exit 1)
+
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
 

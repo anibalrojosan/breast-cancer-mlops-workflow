@@ -1,14 +1,17 @@
-FROM python:3.12-slim
-
+# Stage 1: builder
+FROM python:3.12-slim AS builder
 WORKDIR /app
-
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Stage 2: runtime
+FROM python:3.12-slim AS runtime
+WORKDIR /app
+ENV PATH="/opt/venv/bin:$PATH" PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
+COPY --from=builder /opt/venv /opt/venv
 COPY src/ ./src/
 COPY models/model.joblib ./models/
-COPY data/data.csv ./data/
-
 EXPOSE 5000
-
 CMD ["gunicorn", "--bind", "0.0.0.0:5000", "src.app:app"]

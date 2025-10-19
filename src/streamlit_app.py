@@ -79,7 +79,7 @@ if submitted:
                 st.metric(label="Malignant Probability", value=f"{result['probability_malignant']:.4f}")
 
         else:
-            st.error(f'Error from API: {response.status_code} - {response.json().get('error', 'Unknown error')}')
+            st.error(f"Error from API: {response.status_code} - {response.json().get('error', 'Unknown error')}")
     except requests.exceptions.ConnectionError:
         st.error('Could not connect to the Flask API. Please ensure it is running at http://localhost:5000.')
     except Exception as e:
