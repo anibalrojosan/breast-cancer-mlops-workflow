@@ -2,9 +2,10 @@ from flask import Flask, request, jsonify
 import joblib
 import pandas as pd
 import logging
-import sys # Import sys
-import os
-from src.model.pipeline_utils import create_breast_cancer_pipeline
+import sys 
+from pydantic import ValidationError
+from src.schemas import PredictRequest
+
 
 # Configure logging
 log_file_path = 'api_logs.log'
@@ -41,59 +42,53 @@ def health_check():
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    """Prediction endpoint."""
     logging.info("Prediction endpoint hit.")
     if model is None:
         logging.error("Prediction requested but model is not loaded.")
         return jsonify({'error': 'Model not loaded. Please ensure the model is trained and available.'}), 500
 
-    data = request.get_json(force=True)
-    logging.info(f"Received prediction request with data: {data}")
-
-    # Input validation
-    if not data or not isinstance(data, dict):
-        logging.warning("Invalid input: No JSON data or not a dictionary.")
-        return jsonify({'error': 'Invalid JSON input. Please send a dictionary of features.'}), 400
-
-    # Data transformation and feature alignment 
+    # Parse JSON
     try:
-        # Convert input data to DataFrame, ensuring feature order matches training
-        # For simplicity, assuming input directly matches model's expected features
-        # In a real-world scenario, a more robust feature engineering pipeline is needed
-        input_df = pd.DataFrame([data])
+        data = request.get_json(force=True)
+    except Exception:
+        logging.warning("Invalid JSON body.")
+        return jsonify({'error': 'Invalid JSON body.'}), 400
 
-        # Ensure all expected features are present and in the correct order
-        # This requires knowing the features the model was trained on. For now, we'll assume
-        # the input JSON keys match the column names expected by the model.
-        if hasattr(model, 'feature_names_in_'):
-            expected_features = model.feature_names_in_ # scikit-learn >= 0.23
-            # Reorder and potentially add missing features with default values (e.g., 0 or mean)
-            missing_features = set(expected_features) - set(input_df.columns)
-            for feature in missing_features:
-                input_df[feature] = 0 # Or a more appropriate default/imputation strategy
-            input_df = input_df[expected_features]
-        else:
-            # Fallback for older scikit-learn versions or if feature_names_in_ is not available
-            # This is less robust and relies on the client sending all features in correct order
-            logging.warning("model.feature_names_in_ not found. Relying on input JSON for feature order.")
-            
+    # Validation using Pydantic
+    try:
+        payload = PredictRequest.model_validate(data)
+    except ValidationError as e:
+        logging.warning(f"Validation error: {e}")
+        return jsonify({'error': 'Invalid input', 'details': e.errors()}), 422
+
+    # Build DataFrame using aliases to match training feature names
+    input_df = pd.DataFrame([payload.model_dump(by_alias=True)])
+
+    # Feature alignment
+    if hasattr(model, 'feature_names_in_'):
+        expected_features = list(model.feature_names_in_) # scikit-learn feature names
+        missing_features = set(expected_features) - set(input_df.columns)
+        for feature in missing_features:
+            input_df[feature] = 0
+        input_df = input_df[expected_features]
+    else:
+        logging.warning("model.feature_names_in_ not found. Relying on input JSON for feature order.")
+
+    # Inference
+    try:
         prediction = model.predict(input_df)
         prediction_proba = model.predict_proba(input_df)
-
-        result = {
-            'prediction': int(prediction[0]),
-            'probability_benign': float(prediction_proba[0][0]),   # Class 0 (Benign)
-            'probability_malignant': float(prediction_proba[0][1]) # Class 1 (Malignant)
-        }
-        logging.info(f"Prediction successful: {result}")
-        return jsonify(result), 200
-
-    except KeyError as e:
-        logging.error(f"Missing feature in input data: {e}")
-        return jsonify({'error': f'Missing feature in input data: {e}. Please ensure all required features are provided.'}), 400
     except Exception as e:
         logging.error(f"Error during prediction: {e}", exc_info=True)
         return jsonify({'error': f'An internal error occurred: {e}'}), 500
+
+    result = {
+        'prediction': int(prediction[0]),
+        'probability_benign': float(prediction_proba[0][0]),       # Class 0 is benign
+        'probability_malignant': float(prediction_proba[0][1]),    # Class 1 is malignant
+    }
+    logging.info(f"Prediction successful: {result}")
+    return jsonify(result), 200
 
 if __name__ == '__main__':
     app.run(debug=False, use_reloader=False, host='0.0.0.0', port=5000)

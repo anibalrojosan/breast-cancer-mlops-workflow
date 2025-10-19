@@ -16,6 +16,7 @@ breast-cancer-ops/
 │   └── model.joblib
 ├── src/                       # Source code
 │   ├── app.py                 # Flask API for model inference
+│   ├── schemas.py             # Defines the request schema for the API
 │   ├── model/                 # Machine Learning model components
 │   │   ├── __init__.py            # Makes 'model' a Python package
 │   │   ├── dat-ingestion.py      # Handles raw data loading
@@ -47,6 +48,8 @@ breast-cancer-ops/
 │   │   │   └── test_train_and_save_pipeline.py
 │   │   └── pipeline_utils/        # Tests for src/model/pipeline_utils.py
 │   │       └── test_create_breast_cancer_pipeline.py
+├── .dockerignore              # Files to exclude from Docker build
+├── .gitignore                 # Files to exclude from Git
 ├── .python-version            # Python version specification
 ├── pyproject.toml             # Project metadata and dependencies (managed by uv)
 ├── pytest.ini                 # pytest configuration
