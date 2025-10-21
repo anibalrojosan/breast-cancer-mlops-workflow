@@ -6,10 +6,38 @@ on:
     branches:
       - main
       - feature/uv-ci-test
+      - new-ci-quality-gates
 
 jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Install Python dependencies
+      run: |
+        pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Install QA tooling
+      run: pip install ruff mypy coverage
+
+    - name: Lint, type-check, and test with coverage
+      run: |
+        ruff check .
+        mypy src
+        coverage run -m pytest -q
+        coverage report -m --fail-under=80
+
   build-and-push:
     runs-on: ubuntu-latest
+    needs: quality
     env:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
 
