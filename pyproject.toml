@@ -16,3 +16,19 @@ dependencies = [
     "scikit-learn>=1.7.2",
     "streamlit>=1.50.0",
 ]
+
+[dependency-groups]
+dev = [
+    "coverage>=7.11.0",
+    "mypy>=1.18.2",
+    "pre-commit>=4.3.0",
+    "ruff>=0.14.1",
+]
+
+[tool.mypy]
+files = ["src"]
+explicit_package_bases = true
+
+[[tool.mypy.overrides]]
+module = ["pandas", "numpy", "sklearn.*", "joblib", "requests"]
+ignore_missing_imports = true

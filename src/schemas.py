@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field
 
+
 class PredictRequest(BaseModel):
     radius_mean: float = Field(ge=0)
     texture_mean: float = Field(ge=0)
@@ -35,6 +36,6 @@ class PredictRequest(BaseModel):
     fractal_dimension_worst: float = Field(ge=0)
 
     model_config = {
-        "extra": "forbid",          # reject unknown fields
-        "populate_by_name": True,   # allow passing pythonic names, but we’ll output aliases
+        "extra": "forbid",  # reject unknown fields
+        "populate_by_name": True,  # allow passing pythonic names, but we’ll output aliases
     }
