@@ -20,9 +20,13 @@ dependencies = [
 [dependency-groups]
 dev = [
     "coverage>=7.11.0",
+    "ipykernel>=7.0.1",
+    "matplotlib>=3.10.7",
     "mypy>=1.18.2",
+    "notebook>=7.4.7",
     "pre-commit>=4.3.0",
     "ruff>=0.14.1",
+    "seaborn>=0.13.2",
 ]
 
 [tool.mypy]
