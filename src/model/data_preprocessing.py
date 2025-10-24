@@ -22,3 +22,18 @@ def prepare_features_and_target(df):
     X = df.drop("diagnosis", axis=1)
     y = df["diagnosis"]
     return X, y
+
+def select_features(df):
+    """
+    Selects the final features for the model by dropping columns
+    with low correlation to the target variable.
+    """
+    features_to_drop = [
+        'fractal_dimension_se',
+        'smoothness_se',
+        'fractal_dimension_mean',
+        'texture_se',
+        'symmetry_se'
+    ]
+    return df.drop(columns=features_to_drop, errors='ignore')
+    

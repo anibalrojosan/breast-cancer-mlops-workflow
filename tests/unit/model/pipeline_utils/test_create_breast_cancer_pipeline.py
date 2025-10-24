@@ -1,5 +1,5 @@
 from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestClassifier
 
 from src.model.pipeline_utils import create_breast_cancer_pipeline
@@ -25,26 +25,27 @@ def test_create_breast_cancer_pipeline_has_correct_preprocessor_steps():
     pipeline = create_breast_cancer_pipeline()
     preprocessor = pipeline.named_steps["preprocessor"]
     assert isinstance(preprocessor, Pipeline)
-    assert len(preprocessor.steps) == 2
-    assert preprocessor.steps[0][0] == "drop_cols"
-    assert preprocessor.steps[1][0] == "scaler"
+    assert len(preprocessor.steps) == 3
+    assert preprocessor.steps[0][0] == "drop_unnecessary_cols"
+    assert preprocessor.steps[1][0] == "select_features"
+    assert preprocessor.steps[2][0] == "scaler"
 
 
 def test_drop_cols_configuration():
-    """Test that the 'drop_cols' step is configured correctly."""
+    """Test that the 'drop_unnecessary_cols' step is configured correctly."""
     pipeline = create_breast_cancer_pipeline()
     drop_cols_transformer = pipeline.named_steps["preprocessor"].named_steps[
-        "drop_cols"
+        "drop_unnecessary_cols"
     ]
     assert drop_cols_transformer.func == drop_unnecessary_columns
     assert not drop_cols_transformer.validate
 
 
 def test_scaler_configuration():
-    """Test that the 'scaler' step is configured correctly (MinMaxScaler)."""
+    """Test that the 'scaler' step is configured correctly (StandardScaler)."""
     pipeline = create_breast_cancer_pipeline()
     scaler_transformer = pipeline.named_steps["preprocessor"].named_steps["scaler"]
-    assert isinstance(scaler_transformer, MinMaxScaler)
+    assert isinstance(scaler_transformer, StandardScaler)
 
 
 def test_classifier_estimator_configuration():
